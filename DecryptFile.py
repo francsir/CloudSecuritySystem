@@ -14,5 +14,3 @@ def Decrypt(filename, private_key_filename):
 
     with open(filename + '.decrypted', 'wb') as f:
         f.write(plaintext)
-
-Decrypt("test.txt.encrypted", "private_key.pem")

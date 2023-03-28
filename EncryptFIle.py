@@ -13,4 +13,4 @@ def encrypt(filename, public_key_filename):
     with open(filename + '.encrypted', 'wb') as f:
         f.write(cipher)
 
-encrypt("test.txt", "public_key.pem")
+
