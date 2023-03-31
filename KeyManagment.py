@@ -2,9 +2,9 @@ import GenerateKey
 
 class KeyManager:
     def __init__(self):
-        self.keys = {}
-        self.groups = {}
-        self.passwords = {}
+        self.keys = []
+        self.groups = []
+        self.passwords = []
     
     def add_key(self, group, password):
         if group not in self.groups:

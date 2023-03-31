@@ -5,6 +5,7 @@ import DecryptFile
 
 ##Have to intialize the key managment system
 if __name__ == "__main__":
+    keyManager = KeyManagment.KeyManager()
     main = True
     i = 0
     print("Welcome to Secure File Storage")
@@ -19,7 +20,7 @@ if __name__ == "__main__":
                 group = input()
                 print("Enter the password")
                 password = input()
-                KeyManagment.add_key(group, password)
+                keyManager.add_key(group, password)
             elif i == 2:
                 print("Enter the name of the group")
                 group = input()
@@ -28,7 +29,7 @@ if __name__ == "__main__":
                 print("Are you sure you want to delete this group? (y/n)")
                 answer = input()
                 if answer == "y":
-                    KeyManagment.remove_key(group, password)
+                    keyManager.remove_key(group, password)
                 else:
                     print("Group not deleted")
             elif i == 3:

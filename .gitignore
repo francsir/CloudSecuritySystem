@@ -1,4 +1,5 @@
 test.txt
 test.txt.encrypted
 __pycache__
-
+/privateKeys/.
+/publicKeys/.      
