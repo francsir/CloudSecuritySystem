@@ -3,7 +3,7 @@ from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.backends import default_backend
 
 def encrypt(filename, public_key_filename):
-    with open(public_key_filename, 'rb') as key_file:
+    with open("./publicKeys/"+public_key_filename, 'rb') as key_file:
         public_key = serialization.load_pem_public_key(key_file.read(), backend=default_backend(),)
 
     with open(filename, 'rb') as f:

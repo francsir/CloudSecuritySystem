@@ -40,11 +40,11 @@ if __name__ == "__main__":
                 print("Enter the name of the file")
                 filename = input()
                 key = keyManager.get_key(group, password)
-                print(key)
                 if(key == None):
                     print("Invalid Password")
+
                 else:
-                    EncryptFile.encrypt(filename, key)
+                    EncryptFile.encrypt(filename, key[1])
             elif i == 4:
                 print("Enter the name of the group")
                 group = input()
@@ -52,7 +52,11 @@ if __name__ == "__main__":
                 password = input()
                 print("Enter the name of the file")
                 filename = input()
-                DecryptFile.decrypt(filename, keyManager.get_key(group, password))
+                key = keyManager.get_key(group, password)
+                if(key == None):
+                    print("Invalid Password")
+                else:
+                    DecryptFile.decrypt(filename, key[0])
             else:
                 print("Goodbye")
                 exit()
