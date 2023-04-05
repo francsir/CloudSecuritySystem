@@ -2,6 +2,11 @@ import KeyManagment
 import EncryptFile
 import DecryptFile
 import groupDataBase
+from OpenSSL import crypto
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
+
+
 
 
 
@@ -24,8 +29,13 @@ def editGroup():
         if i == 1:
             print("Enter the name of the user")
             user = input()
-            password = input()
-            db.insertUser(user, group)
+            print("Enter your public key in PEM format into the usersPublicKey.pem file and press enter")
+            wait = input()
+
+            with open("usersPublicKey.pem", 'rb') as key_file:
+                public_key = serialization.load_pem_public_key(key_file.read(), backend=default_backend(),)
+            public_key_der = public_key.public_bytes(encoding=serialization.Encoding.DER, format=serialization.PublicFormat.SubjectPublicKeyInfo)
+            db.insertUser(user, group, public_key_der)
         ##Remove a user
         elif i == 2:
             print("Enter the name of the user")

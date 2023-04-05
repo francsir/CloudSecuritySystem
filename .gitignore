@@ -4,3 +4,4 @@ privateKeys/
 publicKeys/
 temp.py
 groups.db
+usersPublicKey.pem
