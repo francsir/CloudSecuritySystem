@@ -1,6 +1,6 @@
-test.txt
-test.txt.encrypted
+test.*
 __pycache__
 privateKeys/
 publicKeys/
 temp.py
+groups.db

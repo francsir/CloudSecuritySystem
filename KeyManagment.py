@@ -1,43 +1,39 @@
 import GenerateKey
 import os
 
-##currently, if we remove a key, and then add another one, the index will overlap
 class KeyManager:
     def __init__(self):
-        self.keys = []
-        self.groups = []
-        self.passwords = []
+        self.groups = []    
         
-    
-    def add_key(self, group, password):
+    def add_key(self, group, password,db):
         if group not in self.groups:
             self.groups.append(group)
-            self.passwords.append(password)
-            i = self.groups.index(group)
+            i = db.getLength()
             keys = GenerateKey.generateKeys(i)
-            self.keys.append(keys)
+            db.insertGroup(group, password, keys[0], keys[1], i)
         else:
             print("Group Key Pair Already Exists")
 
-    def remove_key(self, group, password):
+    def remove_key(self, group, password, db):
         if group in self.groups:
-            i = self.groups.index(group)
-            if self.passwords[i] == password:
-                self.groups.pop(i)
-                self.passwords.pop(i)
-                self.keys.pop(i)
+            passwordX = db.getPassword(group)
+            i = db.getID(group) 
+            if passwordX == password:
+                self.groups.remove(group)
                 self.deleteKey(i)
+                db.deleteGroup(group)
             else:
                 print("incorrect password")
         else:
-            print("key does not exist")
+            print("group does not exist")
             
 
-    def get_key(self, group, password):
-        if group in self.groups:
-            I = self.groups.index(group)
-            if self.passwords[I] == password:
-                return self.keys[I]
+    def get_key(self, group, password, db):
+        group = db.getGroup(group)
+        if group != None:
+            p = db.getPassword(group)
+            if p == password:
+                return db.getKey(group, password)
         else:
             print("Wrong Password")
             return None
@@ -53,4 +49,20 @@ class KeyManager:
             os.remove(pub)
         else:
             print(pub +"The file does not exist")
+    
+    def verifyGroup(self, group, password, db):
+        p = db.getPassword(group)
+        if p == password:
+            return True
+        else:
+            return False
+        
+    def verifyUser(self, user, password, db):
+        group  = db.getUserGroup(user)
+        p = db.getPassword(group)
+
+        if p == password:
+            return True, group
+        else:
+            return False, None
         
