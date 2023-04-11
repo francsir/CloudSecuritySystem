@@ -1,6 +1,5 @@
 import GenerateKey
 import os
-
 class KeyManager:
     def __init__(self):
         self.groups = []    

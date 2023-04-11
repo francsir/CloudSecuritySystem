@@ -4,11 +4,28 @@ import DecryptFile
 import groupDataBase
 from OpenSSL import crypto
 from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
+from cryptography.x509.oid import NameOID
+import cert
+from cryptography import x509
+import os
 
 
 
-
+def decrypt(password):
+    print("Enter your signed certificate in PEM format into the Users/PubKeys/PutCertHere.pem file and press enter")
+    wait = input()
+    verify = cert.authenticate_user()
+    
+    if verify == False:
+        print("Invalid Certificate")
+        return
+    else:
+        print("Enter the name of the file")
+        filename = input()
+        key = keyManager.get_key(group, password, db)    
+        DecryptFile.decrypt(filename, key[0])
 
 def editGroup():
     print("Enter the name of the group you want to edit")
@@ -16,10 +33,11 @@ def editGroup():
     print("Enter the password")
     password = input()
 
-    if  not keyManager.verifyGroup(group, password, db):
-        print("Invalid Password")
-        return
-    
+    try: 
+        keyManager.verifyGroup(group, password, db)
+    except Exception as E:
+        print("Invalid Group or Password")
+        return    
     print("Press \n 1 to add a user \n 2 to remove a user \n 3 to delete the group")
     i = int(input())
     if i < 1 | i > 3:
@@ -29,13 +47,14 @@ def editGroup():
         if i == 1:
             print("Enter the name of the user")
             user = input()
-            print("Enter your public key in PEM format into the usersPublicKey.pem file and press enter")
-            wait = input()
+            ##print("Enter your public key in PEM format into the usersPublicKey.pem file and press enter")
 
-            with open("usersPublicKey.pem", 'rb') as key_file:
-                public_key = serialization.load_pem_public_key(key_file.read(), backend=default_backend(),)
-            public_key_der = public_key.public_bytes(encoding=serialization.Encoding.DER, format=serialization.PublicFormat.SubjectPublicKeyInfo)
-            db.insertUser(user, group, public_key_der)
+            cert.generate_user_certificate(user)
+            db.insertUser(user, group)
+
+            print("Your Cert is in the ./UsersPubKeys/"+user+" file. Save this on your own machine, it will be deleted after you press enter")
+            wait = input()
+            os.remove("./UsersPubKeys/"+user+".pem")
         ##Remove a user
         elif i == 2:
             print("Enter the name of the user")
@@ -58,6 +77,12 @@ def editGroup():
 
 if __name__ == "__main__":
     keyManager = KeyManagment.KeyManager()
+    try:
+        with open("./CA_CERT/CA.pem", "rb") as f:
+            dsd = 0
+    except Exception as E:
+        cert.cert("My CA")
+
     db = groupDataBase.GroupDataBase()
     main = True
     i = 0
@@ -120,10 +145,11 @@ if __name__ == "__main__":
                 if verify == False:
                     print("Invalid Password")
                 else:
-                    print("Enter the name of the file")
-                    filename = input()
-                    key = keyManager.get_key(group, password, db)    
-                    DecryptFile.decrypt(filename, key[0])
+                    ##print("Enter the name of the file")
+                    ##filename = input()
+                    ##key = keyManager.get_key(group, password, db)    
+                    ##DecryptFile.decrypt(filename, key[0])
+                    decrypt(password)
             elif i == 5:
                 editGroup()
             else:

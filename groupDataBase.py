@@ -10,10 +10,14 @@ class GroupDataBase:
             pass
 
         try:
-            self.cursor.execute('''CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT NOT NULL, group_id TEXT NOT NULL, publicKey BLOB NOT NULL,  FOREIGN KEY (group_id) REFERENCES groups(groups))''')
+            self.cursor.execute('''CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT NOT NULL, group_id TEXT NOT NULL, FOREIGN KEY (group_id) REFERENCES groups(groups))''')
         except:
             pass
 
+    def getPublicKey(self, user):
+        self.cursor.execute('''SELECT publicKey FROM users WHERE name = ?''', (user,))
+        return self.cursor.fetchone()[0]
+    
     def getUserGroup(self, user):
         self.cursor.execute('''SELECT group_id FROM users WHERE name = ?''', (user,))
         return self.cursor.fetchone()[0]
@@ -44,8 +48,8 @@ class GroupDataBase:
         self.cursor.execute('''INSERT INTO groups VALUES (?, ?, ?, ?, ?)''', (group, password, priv, pub, id))
         self.conn.commit()
 
-    def insertUser(self, name, group, pubK):
-        self.cursor.execute('''INSERT INTO users VALUES (NULL, ?, ?, ?)''', (name, group, pubK))
+    def insertUser(self, name, group):
+        self.cursor.execute('''INSERT INTO users VALUES (NULL, ?, ?)''', (name, group))
         self.conn.commit()
     
     def deleteGroup(self, group):
