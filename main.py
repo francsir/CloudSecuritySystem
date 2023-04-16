@@ -27,6 +27,21 @@ def decrypt(password):
         key = keyManager.get_key(group, password, db)    
         DecryptFile.decrypt(filename, key[0])
 
+def encrypt(password): 
+    print("Enter your signed certificate in PEM format into the Users/PubKeys/PutCertHere.pem file and press enter")
+    wait = input()
+    verify = cert.authenticate_user()
+    if verify == False:
+        print("Invalid Certificate")
+        return
+    else:
+        print("Enter the name of the file")
+        filename = input()
+        key = keyManager.get_key(group, password, db)    
+        EncryptFile.encrypt(filename, key[1])
+
+    
+
 def editGroup():
     print("Enter the name of the group you want to edit")
     group = input()
@@ -125,13 +140,14 @@ if __name__ == "__main__":
                 if verify == False:
                     print("Invalid Password")
                 else:
-                    print("Enter the name of the file")
-                    filename = input()
-                    key = keyManager.get_key(group, password, db)
-                    ##if(key == None):
-                    ##    print("Invalid Password")
-                    ##else:
-                    EncryptFile.encrypt(filename, key[1])
+                    ##print("Enter the name of the file")
+                    ##filename = input()
+                    ##key = keyManager.get_key(group, password, db)
+                    ####if(key == None):
+                    ####    print("Invalid Password")
+                    ####else:
+                    ##EncryptFile.encrypt(filename, key[1])
+                    encrypt(password)
 
 
             ##Decrypt a file
