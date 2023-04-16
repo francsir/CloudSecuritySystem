@@ -115,7 +115,6 @@ if __name__ == "__main__":
                 print("Enter the password")
                 password = input()
                 keyManager.add_key(group, password, db)
-                ##db.insertGroup(group, password)
             ##Remove a group
             elif i == 2:
                 print("Enter the name of the group")
